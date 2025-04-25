@@ -16,6 +16,13 @@ export interface CmCsvRow {
   pci: number
 }
 
+export interface CellMeasurement extends CmCsvRow {
+  freqmhz: number
+  band: number
+  xnb: number
+  cellno: number
+}
+
 export default function DataModal({
   className,
   onCsvData,
