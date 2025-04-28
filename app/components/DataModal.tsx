@@ -1,43 +1,18 @@
-import { useState } from 'react'
 import Papa from 'papaparse'
+import {
+  $enbs,
+  $eutraBands,
+  $filteredEnbs,
+  $nrBands,
+  $pointFilter,
+  addCmMeasurements,
+  setSelectedEnbs,
+  setSelectedEutraBands,
+  type CmCsvRow,
+} from '~/store/points'
+import { useStore } from '@nanostores/react'
 
-export interface CmCsvRow {
-  lat: number
-  lng: number
-  alt: number
-  mcc: number
-  mnc: number
-  lac: number
-  cid: number
-  signal: number
-  type: 'GSM' | 'UMTS' | 'CDMA' | 'LTE' | 'NR'
-  subtype: string
-  arfcn: number
-  pci: number
-}
-
-export interface CellMeasurement extends CmCsvRow {
-  freqmhz: number
-  band: number
-  xnb: number
-  cellno: number
-}
-
-export default function DataModal({
-  className,
-  onCsvData,
-}: {
-  className?: string
-  onCsvData: ({
-    filename,
-    data,
-  }: {
-    filename: string
-    data: CmCsvRow[]
-  }) => void
-}) {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null)
-
+export default function DataModal({ className }: { className?: string }) {
   function onParseComplete({
     filename,
     data,
@@ -50,7 +25,6 @@ export default function DataModal({
     const processed = data
       .filter((r) => !isNaN(parseInt(r[0])))
       .map((r) => {
-        // console.log(r)
         return {
           lat: parseFloat(r[0]),
           lng: parseFloat(r[1]),
@@ -67,10 +41,7 @@ export default function DataModal({
         } as CmCsvRow
       })
 
-    onCsvData({
-      filename,
-      data: processed,
-    })
+    addCmMeasurements(processed)
   }
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -96,6 +67,25 @@ export default function DataModal({
     }
   }
 
+  function handleEnbChange(event: React.ChangeEvent<HTMLSelectElement>) {
+    const selectedEnbs = Array.from(event.target.selectedOptions, (option) =>
+      Number.parseInt(option.value)
+    )
+    setSelectedEnbs(selectedEnbs)
+  }
+
+  function handleEutraBandChange(event: React.ChangeEvent<HTMLSelectElement>) {
+    const selectedEutraBands = Array.from(event.target.selectedOptions, (option) =>
+      Number.parseInt(option.value)
+    )
+    setSelectedEutraBands(selectedEutraBands)
+  }
+
+  const enbs = useStore($enbs)
+  // const filteredEnbs = useStore($filteredEnbs)
+  const eutrabands = useStore($eutraBands)
+  const nrbands = useStore($nrBands)
+  const pointFilter = useStore($pointFilter)
   return (
     <div className={className}>
       <form>
@@ -112,6 +102,53 @@ export default function DataModal({
                     file:bg-violet-50 file:text-violet-700
                     hover:file:bg-violet-100"
           />
+        </div>
+        <div>
+          <h3>Select eNB</h3>
+          <select
+            multiple
+            onChange={handleEnbChange}
+            className="block w-full text-sm mt-2 rounded-sm border-0 font-semibold
+                bg-violet-50 text-violet-700 py-2 px-4 hover:bg-violet-100
+                focus:outline-none focus:ring-2 focus:ring-violet-200"
+          >
+            {enbs.map((enb) => (
+              <option key={enb} value={enb}>
+                {enb}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <h3>Select E-UTRA (4G) band</h3>
+          <select
+            multiple
+            onChange={handleEutraBandChange}
+            className="block w-full text-sm mt-2 rounded-sm border-0 font-semibold
+                bg-violet-50 text-violet-700 py-2 px-4 hover:bg-violet-100
+                focus:outline-none focus:ring-2 focus:ring-violet-200"
+          >
+            {eutrabands.map((band) => (
+              <option key={band} value={band}>
+                {band}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <h3>Select NR band</h3>
+          <select
+            multiple
+            className="block w-full text-sm mt-2 rounded-sm border-0 font-semibold
+                bg-violet-50 text-violet-700 py-2 px-4 hover:bg-violet-100
+                focus:outline-none focus:ring-2 focus:ring-violet-200"
+          >
+            {nrbands.map((band) => (
+              <option key={band} value={band}>
+                {band}
+              </option>
+            ))}
+          </select>
         </div>
       </form>
     </div>

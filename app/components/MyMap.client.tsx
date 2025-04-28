@@ -6,14 +6,12 @@ import {
   TileLayer,
 } from 'react-leaflet'
 import type { LatLngTuple } from 'leaflet'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import {
-  nrArfcnToBands,
-  nrArfcnToFrequency,
-  earfcnToBand,
-  earfcnToFrequency,
-} from 'arfcn'
-import type { CmCsvRow, CellMeasurement } from './DataModal'
+  $cellMeasurements,
+  $pointFilter,
+} from '~/store/points'
+import { useStore } from '@nanostores/react'
 
 const position: LatLngTuple = [43.466667, -80.516667]
 
@@ -42,79 +40,15 @@ function determinePointColour(signalDbm: number) {
   return 'rgba(255, 246, 0, 0.8)'
 }
 
-export default function MyApp({ points }: { points: CmCsvRow[] }) {
+export default function MyApp() {
   const [isClient, setIsClient] = useState(false)
 
-  // useEffect(() => {
-  //   setIsClient(true) // Ensures this runs only on the client side.
-  // }, [])
-  // if (!isClient) {
-  //   return null
-  // }
+  const points = useStore($cellMeasurements)
+  const pointFilter = useStore($pointFilter)
 
-  const mPoints: CellMeasurement[] = points.map(
-    (p: CmCsvRow): CellMeasurement => {
-      const freqmhz = ((_p: CmCsvRow) => {
-        if (_p.type === 'LTE') {
-          return earfcnToFrequency(_p.arfcn)
-        } else if (_p.type === 'NR') {
-          return nrArfcnToFrequency(_p.arfcn)
-        }
-        return -1
-      })(p)
-
-      const band = ((_p: CmCsvRow) => {
-        if (_p.type === 'LTE') {
-          return earfcnToBand(_p.arfcn)
-        } else if (_p.type === 'NR') {
-          const bands = nrArfcnToBands(_p.arfcn)
-          if (bands.length > 0) {
-            return bands[0]
-          }
-        }
-        return -1
-      })(p)
-
-      const xnb = ((_p: CmCsvRow) => {
-        if (_p.type === 'LTE') {
-          return _p.cid >> 8
-        } else if (_p.type === 'NR') {
-          return _p.cid >> 14
-        }
-        return -1
-      })(p)
-
-      const cellno = ((_p: CmCsvRow) => {
-        if (_p.type === 'LTE') {
-          return _p.cid & 0xff
-        } else if (_p.type === 'NR') {
-          return _p.cid & 0x3fff
-        }
-        return -1
-      })(p)
-
-      return {
-        ...p,
-        freqmhz,
-        band,
-        xnb,
-        cellno,
-      } as CellMeasurement
-    }
-  )
-
-  // const enbs = [
-  //   ...new Set(mPoints.filter((p) => p.type === 'LTE').map((p) => p.xnb)),
-  // ]
-  // const gnbs = [
-  //   ...new Set(mPoints.filter((p) => p.type === 'NR').map((p) => p.xnb)),
-  // ]
-  // const earfcns = [
-  //   ...new Set(mPoints.filter((p) => p.type === 'LTE').map((p) => p.arfcn)),
-  // ]
-  // const nrarfcns = [
-  //   ...new Set(mPoints.filter((p) => p.type === 'NR').map((p) => p.arfcn)),
-  // ]
+  const filteredPoints = points
+    .filter((p) => pointFilter.enbs.includes(p.xnb))
+    .filter((p) => pointFilter.eutraBands.includes(p.band))
 
   console.log(`MyMap(): ${Date.now()}`)
 
@@ -135,7 +69,7 @@ export default function MyApp({ points }: { points: CmCsvRow[] }) {
         </Popup>
       </Marker>
       <>
-        {points.map((p, i) => {
+        {filteredPoints.map((p, i) => {
           // console.log(`point: ${JSON.stringify(p)}`)
           // if (!p.lat) return <></>
           // if (!p.lat) console.log('undefined latitude')

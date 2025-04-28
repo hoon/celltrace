@@ -9,11 +9,13 @@
     "typecheck": "react-router typegen && tsc -b"
   },
   "dependencies": {
+    "@nanostores/react": "^1.0.0",
     "@react-router/node": "*",
     "@react-router/serve": "*",
     "arfcn": "^2.0.2",
     "isbot": "^5.1.17",
     "leaflet": "^1.9.4",
+    "nanostores": "^1.0.1",
     "papaparse": "^5.5.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
