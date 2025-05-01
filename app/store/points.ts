@@ -153,40 +153,78 @@ export const $nrBands = computed($nrarfcns, (arfcns) => {
 })
 
 export interface PointFilter {
-  enbs: number[]
-  eutraBands: number[]
-  nrbands: number[]
+  id: string
+  type: 'enb' | 'gnb' | 'eutraBand' | 'nrBand' | 'cellNo'
+  values: number[]
 }
 
-export const $pointFilter = atom<PointFilter>({
-  enbs: [],
-  eutraBands: [],
-  nrbands: [],
-})
+export const $pointFilters = atom<PointFilter[]>([])
 
-export function setSelectedEnbs(enbs: number[]) {
-  $pointFilter.set({
-    ...$pointFilter.get(),
-    enbs: enbs,
-  })
+export function addFilter(filter: PointFilter) {
+  $pointFilters.set([...$pointFilters.get(), filter])
 }
 
-export const $filteredEnbs = computed($pointFilter, (pf) =>
-  [
-    ...new Set(
-      $cellMeasurements
-        .get()
-        .filter((cm) =>
-          pf.eutraBands.length < 1 || pf.eutraBands.includes(cm.band)
-        )
-        .map((cm) => cm.xnb)
-    ),
-  ].sort((a, b) => a - b)
+export function removeFilter(id: string) {
+  $pointFilters.set($pointFilters.get().filter((f) => f.id !== id))
+}
+
+export const $filteredPoints = computed(
+  [$cellMeasurements, $pointFilters],
+  (cellMeasurements, pointFilters) => {
+    if (pointFilters.length < 1) {
+      return cellMeasurements
+    }
+
+    const filteredPoints = cellMeasurements.filter((cm) => {
+      return pointFilters.every((pf) => {
+        if (pf.type === 'enb') {
+          return pf.values.includes(cm.xnb)
+        } else if (pf.type === 'gnb') {
+          return pf.values.includes(cm.xnb)
+        } else if (pf.type === 'eutraBand') {
+          return pf.values.includes(cm.band)
+        } else if (pf.type === 'nrBand') {
+          return pf.values.includes(cm.band)
+        } else if (pf.type === 'cellNo') {
+          return pf.values.includes(cm.cellno)
+        }
+        return true
+      })
+    })
+
+    return filteredPoints
+  }
 )
 
-export function setSelectedEutraBands(eutraBands: number[]) {
-  $pointFilter.set({
-    ...$pointFilter.get(),
-    eutraBands: eutraBands,
-  })
-}
+export const $filteredEnbs = computed($filteredPoints, (filteredPoints) => {
+  const enbs = [
+    ...new Set(
+      filteredPoints.filter((fcm) => fcm.type === 'LTE').map((cm) => cm.xnb)
+    ),
+  ].sort((a, b) => a - b)
+
+  return enbs
+})
+
+export const $filteredEutraBands = computed(
+  $filteredPoints,
+  (filteredPoints) => {
+    const eutraBands = [
+      ...new Set(
+        filteredPoints.filter((fcm) => fcm.type === 'LTE').map((cm) => cm.band)
+      ),
+    ].sort((a, b) => a - b)
+
+    return eutraBands
+  }
+)
+
+export const $filteredCellNos = computed($filteredPoints, (filteredPoints) => {
+  const cellNos = [
+    ...new Set(
+      filteredPoints.filter((fcm) => fcm.type === 'LTE').map((cm) => cm.cellno)
+    ),
+  ].sort((a, b) => a - b)
+
+  return cellNos
+})

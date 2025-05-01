@@ -1,16 +1,14 @@
 import Papa from 'papaparse'
 import {
-  $enbs,
-  $eutraBands,
+  $filteredCellNos,
   $filteredEnbs,
-  $nrBands,
-  $pointFilter,
+  $filteredEutraBands,
   addCmMeasurements,
-  setSelectedEnbs,
-  setSelectedEutraBands,
   type CmCsvRow,
 } from '~/store/points'
 import { useStore } from '@nanostores/react'
+import { FilterModal } from './FilterModal'
+import { FiltersList } from './FiltersList'
 
 export default function DataModal({ className }: { className?: string }) {
   function onParseComplete({
@@ -71,21 +69,22 @@ export default function DataModal({ className }: { className?: string }) {
     const selectedEnbs = Array.from(event.target.selectedOptions, (option) =>
       Number.parseInt(option.value)
     )
-    setSelectedEnbs(selectedEnbs)
+    // setSelectedEnbs(selectedEnbs)
   }
 
   function handleEutraBandChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    const selectedEutraBands = Array.from(event.target.selectedOptions, (option) =>
-      Number.parseInt(option.value)
+    const selectedEutraBands = Array.from(
+      event.target.selectedOptions,
+      (option) => Number.parseInt(option.value)
     )
-    setSelectedEutraBands(selectedEutraBands)
+    // setSelectedEutraBands(selectedEutraBands)
   }
 
-  const enbs = useStore($enbs)
-  // const filteredEnbs = useStore($filteredEnbs)
-  const eutrabands = useStore($eutraBands)
-  const nrbands = useStore($nrBands)
-  const pointFilter = useStore($pointFilter)
+  // const enbs = useStore($enbs)
+  const filteredEnbs = useStore($filteredEnbs)
+  const filteredEutraBands = useStore($filteredEutraBands)
+  const filteredCellNos = useStore($filteredCellNos)
+  // const pointFilter = useStore($pointFilter)
   return (
     <div className={className}>
       <form>
@@ -104,15 +103,15 @@ export default function DataModal({ className }: { className?: string }) {
           />
         </div>
         <div>
-          <h3>Select eNB</h3>
+          <h3>eNB IDs</h3>
           <select
             multiple
-            onChange={handleEnbChange}
+            disabled
             className="block w-full text-sm mt-2 rounded-sm border-0 font-semibold
                 bg-violet-50 text-violet-700 py-2 px-4 hover:bg-violet-100
                 focus:outline-none focus:ring-2 focus:ring-violet-200"
           >
-            {enbs.map((enb) => (
+            {filteredEnbs.map((enb) => (
               <option key={enb} value={enb}>
                 {enb}
               </option>
@@ -120,15 +119,15 @@ export default function DataModal({ className }: { className?: string }) {
           </select>
         </div>
         <div>
-          <h3>Select E-UTRA (4G) band</h3>
+          <h3>E-UTRA (4G) bands</h3>
           <select
             multiple
-            onChange={handleEutraBandChange}
+            disabled
             className="block w-full text-sm mt-2 rounded-sm border-0 font-semibold
                 bg-violet-50 text-violet-700 py-2 px-4 hover:bg-violet-100
                 focus:outline-none focus:ring-2 focus:ring-violet-200"
           >
-            {eutrabands.map((band) => (
+            {filteredEutraBands.map((band) => (
               <option key={band} value={band}>
                 {band}
               </option>
@@ -136,20 +135,22 @@ export default function DataModal({ className }: { className?: string }) {
           </select>
         </div>
         <div>
-          <h3>Select NR band</h3>
+          <h3>Cell numbers</h3>
           <select
             multiple
             className="block w-full text-sm mt-2 rounded-sm border-0 font-semibold
                 bg-violet-50 text-violet-700 py-2 px-4 hover:bg-violet-100
                 focus:outline-none focus:ring-2 focus:ring-violet-200"
           >
-            {nrbands.map((band) => (
-              <option key={band} value={band}>
-                {band}
+            {filteredCellNos.map((cellNo) => (
+              <option key={cellNo} value={cellNo}>
+                {cellNo}
               </option>
             ))}
           </select>
         </div>
+        <FiltersList />
+        <FilterModal />
       </form>
     </div>
   )

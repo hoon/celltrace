@@ -7,10 +7,7 @@ import {
 } from 'react-leaflet'
 import type { LatLngTuple } from 'leaflet'
 import { useState } from 'react'
-import {
-  $cellMeasurements,
-  $pointFilter,
-} from '~/store/points'
+import { $filteredPoints } from '~/store/points'
 import { useStore } from '@nanostores/react'
 
 const position: LatLngTuple = [43.466667, -80.516667]
@@ -43,12 +40,12 @@ function determinePointColour(signalDbm: number) {
 export default function MyApp() {
   const [isClient, setIsClient] = useState(false)
 
-  const points = useStore($cellMeasurements)
-  const pointFilter = useStore($pointFilter)
+  // const points = useStore($cellMeasurements)
+  const filteredPoints = useStore($filteredPoints)
 
-  const filteredPoints = points
-    .filter((p) => pointFilter.enbs.includes(p.xnb))
-    .filter((p) => pointFilter.eutraBands.includes(p.band))
+  // const filteredPoints = points
+  // .filter((p) => pointFilter.enbs.includes(p.xnb))
+  // .filter((p) => pointFilter.eutraBands.includes(p.band))
 
   console.log(`MyMap(): ${Date.now()}`)
 
