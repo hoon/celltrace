@@ -220,11 +220,9 @@ export const $filteredEutraBands = computed(
 )
 
 export const $filteredCellNos = computed($filteredPoints, (filteredPoints) => {
-  const cellNos = [
-    ...new Set(
-      filteredPoints.filter((fcm) => fcm.type === 'LTE').map((cm) => cm.cellno)
-    ),
-  ].sort((a, b) => a - b)
+  const cellNos = [...new Set(filteredPoints.map((cm) => cm.cellno))].sort(
+    (a, b) => a - b
+  )
 
   return cellNos
 })

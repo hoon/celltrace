@@ -1,5 +1,5 @@
 import { useStore } from '@nanostores/react'
-import { $pointFilters } from '~/store/points'
+import { $pointFilters, removeFilter } from '~/store/points'
 
 export function FiltersList() {
   const pointFilter2 = useStore($pointFilters)
@@ -7,8 +7,9 @@ export function FiltersList() {
     <div>
       <h3>Filters list</h3>
       {pointFilter2.map((f) => (
-        <div id={f.id}>
+        <div key={f.id}>
           type: {f.type}, values: {f.values.join(', ')}
+          <button onClick={() => removeFilter(f.id)}>Remove</button>
         </div>
       ))}
     </div>

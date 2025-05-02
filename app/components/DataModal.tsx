@@ -65,26 +65,9 @@ export default function DataModal({ className }: { className?: string }) {
     }
   }
 
-  function handleEnbChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    const selectedEnbs = Array.from(event.target.selectedOptions, (option) =>
-      Number.parseInt(option.value)
-    )
-    // setSelectedEnbs(selectedEnbs)
-  }
-
-  function handleEutraBandChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    const selectedEutraBands = Array.from(
-      event.target.selectedOptions,
-      (option) => Number.parseInt(option.value)
-    )
-    // setSelectedEutraBands(selectedEutraBands)
-  }
-
-  // const enbs = useStore($enbs)
   const filteredEnbs = useStore($filteredEnbs)
   const filteredEutraBands = useStore($filteredEutraBands)
   const filteredCellNos = useStore($filteredCellNos)
-  // const pointFilter = useStore($pointFilter)
   return (
     <div className={className}>
       <form>
@@ -108,6 +91,7 @@ export default function DataModal({ className }: { className?: string }) {
             multiple
             disabled
             className="block w-full text-sm mt-2 rounded-sm border-0 font-semibold
+                disabled:opacity-95
                 bg-violet-50 text-violet-700 py-2 px-4 hover:bg-violet-100
                 focus:outline-none focus:ring-2 focus:ring-violet-200"
           >
@@ -124,6 +108,7 @@ export default function DataModal({ className }: { className?: string }) {
             multiple
             disabled
             className="block w-full text-sm mt-2 rounded-sm border-0 font-semibold
+                disabled:opacity-95
                 bg-violet-50 text-violet-700 py-2 px-4 hover:bg-violet-100
                 focus:outline-none focus:ring-2 focus:ring-violet-200"
           >
@@ -138,7 +123,9 @@ export default function DataModal({ className }: { className?: string }) {
           <h3>Cell numbers</h3>
           <select
             multiple
+            disabled
             className="block w-full text-sm mt-2 rounded-sm border-0 font-semibold
+                disabled:opacity-95
                 bg-violet-50 text-violet-700 py-2 px-4 hover:bg-violet-100
                 focus:outline-none focus:ring-2 focus:ring-violet-200"
           >

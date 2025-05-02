@@ -1,13 +1,15 @@
 import React from 'react'
 import { useState } from 'react'
 import { useStore } from '@nanostores/react'
-import { $filteredEnbs, $filteredEutraBands, addFilter } from '~/store/points'
+import { $filteredCellNos, $filteredEnbs, $filteredEutraBands, addFilter } from '~/store/points'
+import { uuidv4 } from '~/util'
 
 export function FilterModal() {
-  const [filterType, setFilterType] = useState<string>()
+  const [filterType, setFilterType] = useState<string>('enb')
 
   const filteredEnbs = useStore($filteredEnbs)
   const filteredEutraBands = useStore($filteredEutraBands)
+  const filteredCellNos = useStore($filteredCellNos)
 
   const [selectedValues, setSelectedValues] = useState<number[]>()
 
@@ -17,7 +19,7 @@ export function FilterModal() {
       ['enb', 'gnb', 'eutraBand', 'nrBand', 'cellNo'].includes(filterType)
     ) {
       addFilter({
-        id: '',
+        id: uuidv4(),
         type: filterType as 'enb' | 'gnb' | 'eutraBand' | 'nrBand' | 'cellNo',
         values: selectedValues ?? [],
       })
@@ -66,6 +68,24 @@ export function FilterModal() {
           {filteredEutraBands.map((eutraBand) => (
             <option key={eutraBand} value={eutraBand}>
               {eutraBand}
+            </option>
+          ))}
+        </select>
+      )}
+      {filterType === 'cellNo' && (
+        <select
+          multiple
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+            setSelectedValues(
+              Array.from(e.target.selectedOptions, (option) =>
+                Number.parseInt(option.value)
+              )
+            )
+          }}
+        >
+          {filteredCellNos.map((cellNo) => (
+            <option key={cellNo} value={cellNo}>
+              {cellNo}
             </option>
           ))}
         </select>
