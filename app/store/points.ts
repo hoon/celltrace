@@ -154,8 +154,10 @@ export const $nrBands = computed($nrarfcns, (arfcns) => {
 
 export interface PointFilter {
   id: string
+  mode: 'exclude' | 'colour'
   type: 'enb' | 'gnb' | 'eutraBand' | 'nrBand' | 'cellNo'
   values: number[]
+  colour?: string
 }
 
 export const $pointFilters = atom<PointFilter[]>([])
@@ -176,20 +178,22 @@ export const $filteredPoints = computed(
     }
 
     const filteredPoints = cellMeasurements.filter((cm) => {
-      return pointFilters.every((pf) => {
-        if (pf.type === 'enb') {
-          return pf.values.includes(cm.xnb)
-        } else if (pf.type === 'gnb') {
-          return pf.values.includes(cm.xnb)
-        } else if (pf.type === 'eutraBand') {
-          return pf.values.includes(cm.band)
-        } else if (pf.type === 'nrBand') {
-          return pf.values.includes(cm.band)
-        } else if (pf.type === 'cellNo') {
-          return pf.values.includes(cm.cellno)
-        }
-        return true
-      })
+      return pointFilters
+        .filter((pf) => pf.mode === 'exclude')
+        .every((pf) => {
+          if (pf.type === 'enb') {
+            return pf.values.includes(cm.xnb)
+          } else if (pf.type === 'gnb') {
+            return pf.values.includes(cm.xnb)
+          } else if (pf.type === 'eutraBand') {
+            return pf.values.includes(cm.band)
+          } else if (pf.type === 'nrBand') {
+            return pf.values.includes(cm.band)
+          } else if (pf.type === 'cellNo') {
+            return pf.values.includes(cm.cellno)
+          }
+          return true
+        })
     })
 
     return filteredPoints

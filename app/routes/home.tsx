@@ -6,8 +6,11 @@ import DataModal from '~/components/DataModal'
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: 'New React Router App' },
-    { name: 'description', content: 'Welcome to React Router!' },
+    { title: 'celltrace' },
+    {
+      name: 'description',
+      content: 'Trace and narrow down your cell measurement trails',
+    },
   ]
 }
 

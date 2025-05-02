@@ -7,12 +7,17 @@ import {
 } from 'react-leaflet'
 import type { LatLngTuple } from 'leaflet'
 import { useState } from 'react'
-import { $filteredPoints } from '~/store/points'
+import {
+  $filteredPoints,
+  $pointFilters,
+  type CellMeasurement,
+  type PointFilter,
+} from '~/store/points'
 import { useStore } from '@nanostores/react'
 
 const position: LatLngTuple = [43.466667, -80.516667]
 
-function determinePointColour(signalDbm: number) {
+function getSignalStrengthColour(signalDbm: number) {
   // [0, -85] => rgba(0, 255, 0, 0.8)
   // [-85, -95] => rgba(50, 200, 0, 0.8)
   // [-95, -105] => rgba(50, 100, 0, 0.8)
@@ -37,15 +42,39 @@ function determinePointColour(signalDbm: number) {
   return 'rgba(255, 246, 0, 0.8)'
 }
 
+function getPointColour(pointFilters: PointFilter[], point: CellMeasurement) {
+  let colour: string | undefined = undefined
+  for (const pf of pointFilters.filter((pf) => pf.mode === 'colour')) {
+    if (pf.type === 'enb' && point.type === 'LTE') {
+      if (pf.values.includes(point.xnb)) {
+        colour = pf.colour
+      }
+    } else if (pf.type === 'gnb' && point.type === 'NR') {
+      if (pf.values.includes(point.xnb)) {
+        colour = pf.colour
+      }
+    } else if (pf.type === 'eutraBand' && point.type === 'LTE') {
+      if (pf.values.includes(point.band)) {
+        colour = pf.colour
+      }
+    } else if (pf.type === 'nrBand' && point.type === 'NR') {
+      if (pf.values.includes(point.band)) {
+        colour = pf.colour
+      }
+    } else if (pf.type === 'cellNo') {
+      if (pf.values.includes(point.cellno)) {
+        colour = pf.colour
+      }
+    }
+  }
+  return colour ?? getSignalStrengthColour(point.signal)
+}
+
 export default function MyApp() {
   const [isClient, setIsClient] = useState(false)
 
-  // const points = useStore($cellMeasurements)
   const filteredPoints = useStore($filteredPoints)
-
-  // const filteredPoints = points
-  // .filter((p) => pointFilter.enbs.includes(p.xnb))
-  // .filter((p) => pointFilter.eutraBands.includes(p.band))
+  const pointFilters = useStore($pointFilters)
 
   console.log(`MyMap(): ${Date.now()}`)
 
@@ -67,27 +96,19 @@ export default function MyApp() {
       </Marker>
       <>
         {filteredPoints.map((p, i) => {
-          // console.log(`point: ${JSON.stringify(p)}`)
-          // if (!p.lat) return <></>
-          // if (!p.lat) console.log('undefined latitude')
+          const pColour = getPointColour(pointFilters, p)
 
-          // console.log(`m-${i}`)
-          const pColour = determinePointColour(p.signal)
           return (
             <CircleMarker
-              key={`m-${i}`}
+              key={`m-${i}-${pColour}`}
               center={[p.lat, p.lng]}
               radius={2}
               color={pColour}
               fillColor={pColour}
             ></CircleMarker>
           )
-          // return (<></>)
         })}
       </>
-      {/* {points[0] && <CircleMarker key="hey" center={[points[0].lat, points[0].lng]} radius={2}/>} */}
-      {/* {points.length > 0 && <Marker position={[position[0], position[1] + 0.001]} />} */}
-      {/* <></> */}
     </MapContainer>
   )
 }
