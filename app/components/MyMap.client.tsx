@@ -65,6 +65,10 @@ function getPointColour(pointFilters: PointFilter[], point: CellMeasurement) {
       if (pf.values.includes(point.cellno)) {
         colour = pf.colour
       }
+    } else if (pf.type === 'signalStrength') {
+      if (point.signal >= pf.values[0] && point.signal <= pf.values[1]) {
+        colour = pf.colour
+      }
     }
   }
   return colour ?? getSignalStrengthColour(point.signal)

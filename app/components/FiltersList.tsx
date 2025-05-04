@@ -7,8 +7,10 @@ export function FiltersList() {
     <div>
       <h3>Filters list</h3>
       {pointFilter2.map((f) => (
-        <div key={f.id}>
-          mode: {f.mode}, type: {f.type}, values: {f.values.join(', ')}
+        <div key={f.id} className="w-80">
+          <span className="mr-2">
+            mode: {f.mode}, type: {f.type}, values: {f.values.join(', ')}
+          </span>
           {f.colour && (
             <div
               style={{
@@ -17,9 +19,16 @@ export function FiltersList() {
                 height: '1em',
                 backgroundColor: f.colour,
               }}
+              className="mr-2"
             ></div>
           )}
-          <button onClick={() => removeFilter(f.id)}>Remove</button>
+          <button
+            className="bg-violet-50 text-violet-700 hover:bg-violet-100
+                focus:outline-none focus:ring-2 focus:ring-violet-200"
+            onClick={() => removeFilter(f.id)}
+          >
+            Remove
+          </button>
         </div>
       ))}
     </div>

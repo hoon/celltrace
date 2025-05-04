@@ -155,7 +155,7 @@ export const $nrBands = computed($nrarfcns, (arfcns) => {
 export interface PointFilter {
   id: string
   mode: 'exclude' | 'colour'
-  type: 'enb' | 'gnb' | 'eutraBand' | 'nrBand' | 'cellNo'
+  type: 'enb' | 'gnb' | 'eutraBand' | 'nrBand' | 'cellNo' | 'signalStrength'
   values: number[]
   colour?: string
 }
@@ -191,6 +191,8 @@ export const $filteredPoints = computed(
             return pf.values.includes(cm.band)
           } else if (pf.type === 'cellNo') {
             return pf.values.includes(cm.cellno)
+          } else if (pf.type === 'signalStrength') {
+            return cm.signal >= pf.values[0] && cm.signal <= pf.values[1]
           }
           return true
         })

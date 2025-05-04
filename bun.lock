@@ -6,7 +6,7 @@
         "@nanostores/react": "^1.0.0",
         "@react-router/node": "*",
         "@react-router/serve": "*",
-        "arfcn": "^2.0.2",
+        "arfcn": "^2.0.3",
         "isbot": "^5.1.17",
         "leaflet": "^1.9.4",
         "nanostores": "^1.0.1",
@@ -272,7 +272,7 @@
 
     "anymatch": ["anymatch@3.1.3", "", { "dependencies": { "normalize-path": "^3.0.0", "picomatch": "^2.0.4" } }, "sha512-KMReFUr0B4t+D+OBkjR3KYqvocp2XaSzO55UcB6mgQMd3KbcE+mWTyvVV7D/zsdEbNnV6acZUutkiHQXvTr1Rw=="],
 
-    "arfcn": ["arfcn@2.0.2", "", { "peerDependencies": { "typescript": "^5.0.0" } }, "sha512-ncgALbCcQOmDt3Nh/3WCgoexVk1YTwMS130funhLGDIucoyAVAvY2sntQNcx8KbeplGS1NEfowsniySGeX4ShA=="],
+    "arfcn": ["arfcn@2.0.3", "", { "peerDependencies": { "typescript": "^5.0.0" } }, "sha512-WahsNfZN9J7B8H5f60mH2kE4gAUgH+MEX63aWvB+ZdQz/no9CfFpciCsO3rO9FLiZWfnQhxrlrRS/E4MI4iBEA=="],
 
     "arg": ["arg@5.0.2", "", {}, "sha512-PYjyFOLKQ9y57JvQ6QLo8dAgNqswh8M1RMJYdQduT6xbWSgK36P/Z/v+p888pM69jMMfS8Xd8F6I1kQ/I9HUGg=="],
 
