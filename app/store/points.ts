@@ -39,6 +39,11 @@ export function addCmMeasurements(points: CmCsvRow[]) {
   $cmMeasurements.set(newPoints)
 }
 
+export const $numCmMeasurements = computed(
+  $cmMeasurements,
+  (points) => points.length
+)
+
 export const $cellMeasurements = computed(
   $cmMeasurements,
   (points: CmCsvRow[]) =>
@@ -200,6 +205,11 @@ export const $filteredPoints = computed(
 
     return filteredPoints
   }
+)
+
+export const $numFilteredPoints = computed(
+  $filteredPoints,
+  (filteredPoints) => filteredPoints.length
 )
 
 export const $filteredEnbs = computed($filteredPoints, (filteredPoints) => {

@@ -9,6 +9,7 @@ import {
 import { useStore } from '@nanostores/react'
 import { FilterModal } from './FilterModal'
 import { FiltersList } from './FiltersList'
+import { NumPointsCard } from './NumPointsCard'
 
 export default function DataModal({ className }: { className?: string }) {
   function onParseComplete({
@@ -136,6 +137,7 @@ export default function DataModal({ className }: { className?: string }) {
             ))}
           </select>
         </div>
+        <NumPointsCard />
         <FiltersList />
         <FilterModal />
       </form>
