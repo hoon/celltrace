@@ -4,7 +4,9 @@ import { useStore } from '@nanostores/react'
 import {
   $filteredCellNos,
   $filteredEnbs,
+  $filteredGnbs,
   $filteredEutraBands,
+  $filteredNrBands,
   addFilter,
 } from '~/store/points'
 import { uuidv4 } from '~/util'
@@ -17,7 +19,9 @@ export function FilterModal() {
   const [filterColour, setFilterColour] = useState<string>('blue')
 
   const filteredEnbs = useStore($filteredEnbs)
+  const filteredGnbs = useStore($filteredGnbs)
   const filteredEutraBands = useStore($filteredEutraBands)
+  const filteredNrBands = useStore($filteredNrBands)
   const filteredCellNos = useStore($filteredCellNos)
 
   const [selectedValues, setSelectedValues] = useState<number[]>()
@@ -93,8 +97,8 @@ export function FilterModal() {
       >
         <option value="enb">eNB (4G)</option>
         <option value="gnb">gNB (5G)</option>
-        <option value="eutraBand">4G E-UTRA (LTE) band</option>
-        <option value="nrBand">5G 5G NR NR band</option>
+        <option value="eutraBand">4G LTE band</option>
+        <option value="nrBand">5G NR band</option>
         <option value="cellNo">Cell number</option>
         <option value="signalStrength">Signal strength</option>
       </select>
@@ -111,7 +115,7 @@ export function FilterModal() {
         >
           {filteredEnbs.map((enb) => (
             <option key={enb} value={enb}>
-              {enb}
+              {enb === -3 ? 'SDL/SUL' : enb}
             </option>
           ))}
         </select>
@@ -130,6 +134,42 @@ export function FilterModal() {
           {filteredEutraBands.map((eutraBand) => (
             <option key={eutraBand} value={eutraBand}>
               {eutraBand}
+            </option>
+          ))}
+        </select>
+      )}
+      {filterType === 'gnb' && (
+        <select
+          multiple
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+            setSelectedValues(
+              Array.from(e.target.selectedOptions, (option) =>
+                Number.parseInt(option.value)
+              )
+            )
+          }}
+        >
+          {filteredGnbs.map((gnb) => (
+            <option key={gnb} value={gnb}>
+              {gnb === -2 ? 'NSA' : gnb}
+            </option>
+          ))}
+        </select>
+      )}
+      {filterType === 'nrBand' && (
+        <select
+          multiple
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+            setSelectedValues(
+              Array.from(e.target.selectedOptions, (option) =>
+                Number.parseInt(option.value)
+              )
+            )
+          }}
+        >
+          {filteredNrBands.map((nrBand) => (
+            <option key={nrBand} value={nrBand}>
+              {nrBand === -2 ? 'NSA' : nrBand}
             </option>
           ))}
         </select>

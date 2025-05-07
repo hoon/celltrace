@@ -60,20 +60,29 @@ export const $cellMeasurements = computed(
       const band = ((_p: CmCsvRow) => {
         if (_p.type === 'LTE') {
           return earfcnToBand(_p.arfcn)
-        } else if (_p.type === 'NR') {
+        } else if (_p.type === 'NR' && Number.isFinite(_p.arfcn)) {
           const bands = nrArfcnToBands(_p.arfcn)
           if (bands.length > 0) {
             return bands[0]
           }
+        } else if (_p.type === 'NR' && _p.subtype === 'NSA') {
+          return -2 // 5G NSA w/o NR-ARFCN
         }
         return -1
       })(p)
 
       const xnb = ((_p: CmCsvRow) => {
-        if (_p.type === 'LTE') {
+        if (_p.type === 'LTE' && _p.cid !== 0) {
           return _p.cid >> 8
-        } else if (_p.type === 'NR') {
+        } else if (_p.type === 'LTE' && _p.cid === 0) {
+          if (Number.isFinite(_p.arfcn)) {
+            return -3 // SDL/SUL
+          }
+          return -1
+        } else if (_p.type === 'NR' && _p.subtype !== 'NSA') {
           return _p.cid >> 14
+        } else if (_p.type === 'NR' && _p.subtype === 'NSA') {
+          return -2 // 5G NSA
         }
         return -1
       })(p)
@@ -222,6 +231,16 @@ export const $filteredEnbs = computed($filteredPoints, (filteredPoints) => {
   return enbs
 })
 
+export const $filteredGnbs = computed($filteredPoints, (filteredPoints) => {
+  const gnbs = [
+    ...new Set(
+      filteredPoints.filter((fcm) => fcm.type === 'NR').map((cm) => cm.xnb)
+    ),
+  ].sort((a, b) => a - b)
+
+  return gnbs
+})
+
 export const $filteredEutraBands = computed(
   $filteredPoints,
   (filteredPoints) => {
@@ -234,6 +253,16 @@ export const $filteredEutraBands = computed(
     return eutraBands
   }
 )
+
+export const $filteredNrBands = computed($filteredPoints, (filteredPoints) => {
+  const nrBands = [
+    ...new Set(
+      filteredPoints.filter((fcm) => fcm.type === 'NR').map((cm) => cm.band)
+    ),
+  ].sort((a, b) => a - b)
+
+  return nrBands
+})
 
 export const $filteredCellNos = computed($filteredPoints, (filteredPoints) => {
   const cellNos = [...new Set(filteredPoints.map((cm) => cm.cellno))].sort(
