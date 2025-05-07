@@ -10,8 +10,13 @@ import { useStore } from '@nanostores/react'
 import { FilterModal } from './FilterModal'
 import { FiltersList } from './FiltersList'
 import { NumPointsCard } from './NumPointsCard'
+import { EutraCard } from './EutraCard'
+import { useState } from 'react'
+import { NrCard } from './NrCard'
 
 export default function DataModal({ className }: { className?: string }) {
+  const [ituGen, setItuGen] = useState<'4g' | '5g'>('4g')
+
   function onParseComplete({
     filename,
     data,
@@ -66,81 +71,81 @@ export default function DataModal({ className }: { className?: string }) {
     }
   }
 
+  function handleItuGenChange(event: React.ChangeEvent<HTMLInputElement>) {
+    if (['4g', '5g'].includes(event.target.value)) {
+      setItuGen(event.target.value as '4g' | '5g')
+    }
+  }
+
   const filteredEnbs = useStore($filteredEnbs)
   const filteredEutraBands = useStore($filteredEutraBands)
   const filteredCellNos = useStore($filteredCellNos)
   return (
     <div className={className}>
-      <form>
-        <div>
-          <h3>Add CellMapper CSV trace</h3>
-          <input
-            type="file"
-            accept=".csv"
-            onChange={handleFileChange}
-            className="block w-full text-sm text-gray-500 dark:text-gray-300
+      <div className="h-auto">
+        <form>
+          <div>
+            <h3>Add CellMapper CSV trace</h3>
+            <input
+              type="file"
+              accept=".csv"
+              onChange={handleFileChange}
+              className="block w-full text-sm text-gray-500 dark:text-gray-300
                     mt-2 file:mr-4 file:py-2 file:px-4
                     file:rounded-full file:border-0
                     file:text-sm file:font-semibold
                     file:bg-violet-50 file:text-violet-700
                     hover:file:bg-violet-100"
-          />
-        </div>
-        <div>
-          <h3>eNB IDs</h3>
-          <select
-            multiple
-            disabled
-            className="block w-full text-sm mt-2 rounded-sm border-0 font-semibold
+            />
+          </div>
+          <div>
+            <input
+              type="radio"
+              name="ituGen"
+              id="ituGen4g"
+              value="4g"
+              onChange={handleItuGenChange}
+              checked={ituGen === '4g'}
+            />
+            <label htmlFor="ituGen4g" className="ml-1 mr-2">
+              4G LTE
+            </label>
+            <input
+              type="radio"
+              name="ituGen"
+              id="ituGen5g"
+              value="5g"
+              onChange={handleItuGenChange}
+              checked={ituGen === '5g'}
+            />
+            <label htmlFor="ituGen5g" className="ml-1">
+              5G NR
+            </label>
+          </div>
+          {ituGen === '4g' && <EutraCard />}
+          {ituGen === '5g' && <NrCard />}
+          <div>
+            <h3>Cell numbers</h3>
+            <select
+              multiple
+              disabled
+              className="block w-full text-sm mt-2 rounded-sm border-0 font-semibold
                 disabled:opacity-95
                 bg-violet-50 text-violet-700 py-2 px-4 hover:bg-violet-100
                 focus:outline-none focus:ring-2 focus:ring-violet-200"
-          >
-            {filteredEnbs.map((enb) => (
-              <option key={enb} value={enb}>
-                {enb}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <h3>E-UTRA (4G) bands</h3>
-          <select
-            multiple
-            disabled
-            className="block w-full text-sm mt-2 rounded-sm border-0 font-semibold
-                disabled:opacity-95
-                bg-violet-50 text-violet-700 py-2 px-4 hover:bg-violet-100
-                focus:outline-none focus:ring-2 focus:ring-violet-200"
-          >
-            {filteredEutraBands.map((band) => (
-              <option key={band} value={band}>
-                {band}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <h3>Cell numbers</h3>
-          <select
-            multiple
-            disabled
-            className="block w-full text-sm mt-2 rounded-sm border-0 font-semibold
-                disabled:opacity-95
-                bg-violet-50 text-violet-700 py-2 px-4 hover:bg-violet-100
-                focus:outline-none focus:ring-2 focus:ring-violet-200"
-          >
-            {filteredCellNos.map((cellNo) => (
-              <option key={cellNo} value={cellNo}>
-                {cellNo}
-              </option>
-            ))}
-          </select>
-        </div>
-        <NumPointsCard />
-        <FiltersList />
-        <FilterModal />
-      </form>
+            >
+              {filteredCellNos.map((cellNo) => (
+                <option key={cellNo} value={cellNo}>
+                  {cellNo}
+                </option>
+              ))}
+            </select>
+          </div>
+          <NumPointsCard />
+          <FiltersList />
+          <FilterModal />
+        </form>
+      </div>
     </div>
   )
 }

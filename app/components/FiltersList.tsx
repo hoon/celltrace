@@ -7,7 +7,7 @@ export function FiltersList() {
     <div>
       <h3>Filters list</h3>
       {pointFilter2.map((f) => (
-        <div key={f.id} className="w-80">
+        <div key={f.id} className="w-fit">
           <span className="mr-2">
             mode: {f.mode}, type: {f.type}, values: {f.values.join(', ')}
           </span>

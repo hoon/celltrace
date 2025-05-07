@@ -227,10 +227,9 @@ export function FilterModal() {
           onChange={(e) =>
             setFilteringMode(e.target.value as 'exclude' | 'colour')
           }
+          defaultValue={'exclude'}
         >
-          <option value="exclude" selected>
-            Exclude
-          </option>
+          <option value="exclude">Exclude</option>
           <option value="colour">Colour</option>
         </select>
       </div>

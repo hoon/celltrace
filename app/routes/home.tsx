@@ -32,7 +32,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   return (
     <Suspense fallback={<div>Loading map...</div>}>
       <MyMap />
-      <DataModal className="fixed z-[1000] bg-white dark:bg-gray-950 top-6 right-6 p-4 rounded-md drop-shadow-md" />
+      <DataModal className="fixed z-[1000] max-h-[calc(100vh-4rem)] w-80 bg-white dark:bg-gray-950 top-6 right-6 p-4 rounded-md drop-shadow-md overflow-auto" />
     </Suspense>
   )
 }

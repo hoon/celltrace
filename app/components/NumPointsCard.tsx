@@ -6,7 +6,7 @@ export function NumPointsCard() {
   const numFilteredPoints = useStore($numFilteredPoints)
 
   return (
-    <div className="w-80 text-sm">
+    <div className="w-fit text-sm">
       {numFilteredPoints} of {numCmMeasurements} displayed
     </div>
   )
