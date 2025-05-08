@@ -1,4 +1,7 @@
+import { useState } from 'react'
+import { useStore } from '@nanostores/react'
 import Papa from 'papaparse'
+
 import {
   $filteredCellNos,
   $filteredEnbs,
@@ -6,13 +9,12 @@ import {
   addCmMeasurements,
   type CmCsvRow,
 } from '~/store/points'
-import { useStore } from '@nanostores/react'
 import { FilterModal } from './FilterModal'
 import { FiltersList } from './FiltersList'
 import { NumPointsCard } from './NumPointsCard'
 import { EutraCard } from './EutraCard'
-import { useState } from 'react'
 import { NrCard } from './NrCard'
+import { disabledMultiSelectClassName } from '../style/common'
 
 export default function DataModal({ className }: { className?: string }) {
   const [ituGen, setItuGen] = useState<'4g' | '5g'>('4g')
@@ -84,13 +86,13 @@ export default function DataModal({ className }: { className?: string }) {
     <div className={className}>
       <div className="h-auto">
         <form>
-          <div>
+          <div className="mb-2">
             <h3>Add CellMapper CSV trace</h3>
             <input
               type="file"
               accept=".csv"
               onChange={handleFileChange}
-              className="block w-full text-sm text-gray-500 dark:text-gray-300
+              className="block w-full text-sm dark:text-gray-300
                     mt-2 file:mr-4 file:py-2 file:px-4
                     file:rounded-full file:border-0
                     file:text-sm file:font-semibold
@@ -98,7 +100,7 @@ export default function DataModal({ className }: { className?: string }) {
                     hover:file:bg-violet-100"
             />
           </div>
-          <div>
+          <div className="mb-1">
             <input
               type="radio"
               name="ituGen"
@@ -126,14 +128,7 @@ export default function DataModal({ className }: { className?: string }) {
           {ituGen === '5g' && <NrCard />}
           <div>
             <h3>Cell numbers</h3>
-            <select
-              multiple
-              disabled
-              className="block w-full text-sm mt-2 rounded-sm border-0 font-semibold
-                disabled:opacity-95
-                bg-violet-50 text-violet-700 py-2 px-4 hover:bg-violet-100
-                focus:outline-none focus:ring-2 focus:ring-violet-200"
-            >
+            <select multiple disabled className={disabledMultiSelectClassName}>
               {filteredCellNos.map((cellNo) => (
                 <option key={cellNo} value={cellNo}>
                   {cellNo}
@@ -142,7 +137,9 @@ export default function DataModal({ className }: { className?: string }) {
             </select>
           </div>
           <NumPointsCard />
+          <hr className="my-1" />
           <FiltersList />
+          <hr className="my-1" />
           <FilterModal />
         </form>
       </div>

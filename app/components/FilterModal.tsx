@@ -26,6 +26,9 @@ export function FilterModal() {
 
   const [selectedValues, setSelectedValues] = useState<number[]>()
 
+  const multiSelectDivClassName = 'w-full'
+  const multiSelectClassName = 'w-full pl-1 pr-1'
+
   function handleAdd(event: React.MouseEvent<HTMLButtonElement>): void {
     if (
       filterType &&
@@ -89,108 +92,126 @@ export function FilterModal() {
   return (
     <div>
       <h3>Add filter</h3>
-      <select
-        onChange={(e) => {
-          setFilterType(e.target.value)
-          setSelectedValues(undefined)
-        }}
-      >
-        <option value="enb">eNB (4G)</option>
-        <option value="gnb">gNB (5G)</option>
-        <option value="eutraBand">4G LTE band</option>
-        <option value="nrBand">5G NR band</option>
-        <option value="cellNo">Cell number</option>
-        <option value="signalStrength">Signal strength</option>
-      </select>
-      {filterType === 'enb' && (
+      <div className="w-full mb-1">
         <select
-          multiple
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-            setSelectedValues(
-              Array.from(e.target.selectedOptions, (option) =>
-                Number.parseInt(option.value)
-              )
-            )
+          className="w-full pl-1 pr-1"
+          onChange={(e) => {
+            setFilterType(e.target.value)
+            setSelectedValues(undefined)
           }}
         >
-          {filteredEnbs.map((enb) => (
-            <option key={enb} value={enb}>
-              {enb === -3 ? 'SDL/SUL' : enb}
-            </option>
-          ))}
+          <option value="enb">eNB (4G)</option>
+          <option value="gnb">gNB (5G)</option>
+          <option value="eutraBand">4G LTE band</option>
+          <option value="nrBand">5G NR band</option>
+          <option value="cellNo">Cell number</option>
+          <option value="signalStrength">Signal strength</option>
         </select>
+      </div>
+      {filterType === 'enb' && (
+        <div className={multiSelectDivClassName}>
+          <select
+            className={multiSelectClassName}
+            multiple
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+              setSelectedValues(
+                Array.from(e.target.selectedOptions, (option) =>
+                  Number.parseInt(option.value)
+                )
+              )
+            }}
+          >
+            {filteredEnbs.map((enb) => (
+              <option key={enb} value={enb}>
+                {enb === -3 ? 'SDL/SUL' : enb}
+              </option>
+            ))}
+          </select>
+        </div>
       )}
       {filterType === 'eutraBand' && (
-        <select
-          multiple
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-            setSelectedValues(
-              Array.from(e.target.selectedOptions, (option) =>
-                Number.parseInt(option.value)
+        <div className={multiSelectDivClassName}>
+          <select
+            className={multiSelectClassName}
+            multiple
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+              setSelectedValues(
+                Array.from(e.target.selectedOptions, (option) =>
+                  Number.parseInt(option.value)
+                )
               )
-            )
-          }}
-        >
-          {filteredEutraBands.map((eutraBand) => (
-            <option key={eutraBand} value={eutraBand}>
-              {eutraBand}
-            </option>
-          ))}
-        </select>
+            }}
+          >
+            {filteredEutraBands.map((eutraBand) => (
+              <option key={eutraBand} value={eutraBand}>
+                {eutraBand}
+              </option>
+            ))}
+          </select>
+        </div>
       )}
       {filterType === 'gnb' && (
-        <select
-          multiple
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-            setSelectedValues(
-              Array.from(e.target.selectedOptions, (option) =>
-                Number.parseInt(option.value)
+        <div className={multiSelectDivClassName}>
+          <select
+            className={multiSelectClassName}
+            multiple
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+              setSelectedValues(
+                Array.from(e.target.selectedOptions, (option) =>
+                  Number.parseInt(option.value)
+                )
               )
-            )
-          }}
-        >
-          {filteredGnbs.map((gnb) => (
-            <option key={gnb} value={gnb}>
-              {gnb === -2 ? 'NSA' : gnb}
-            </option>
-          ))}
-        </select>
+            }}
+          >
+            {filteredGnbs.map((gnb) => (
+              <option key={gnb} value={gnb}>
+                {gnb === -2 ? 'NSA' : gnb}
+              </option>
+            ))}
+          </select>
+        </div>
       )}
       {filterType === 'nrBand' && (
-        <select
-          multiple
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-            setSelectedValues(
-              Array.from(e.target.selectedOptions, (option) =>
-                Number.parseInt(option.value)
+        <div className={multiSelectDivClassName}>
+          <select
+            className={multiSelectClassName}
+            multiple
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+              setSelectedValues(
+                Array.from(e.target.selectedOptions, (option) =>
+                  Number.parseInt(option.value)
+                )
               )
-            )
-          }}
-        >
-          {filteredNrBands.map((nrBand) => (
-            <option key={nrBand} value={nrBand}>
-              {nrBand === -2 ? 'NSA' : nrBand}
-            </option>
-          ))}
-        </select>
+            }}
+          >
+            {filteredNrBands.map((nrBand) => (
+              <option key={nrBand} value={nrBand}>
+                {nrBand === -2 ? 'NSA' : nrBand}
+              </option>
+            ))}
+          </select>
+        </div>
       )}
       {filterType === 'cellNo' && (
-        <select
-          multiple
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-            setSelectedValues(
-              Array.from(e.target.selectedOptions, (option) =>
-                Number.parseInt(option.value)
+        <div className={multiSelectDivClassName}>
+          <select
+            className={multiSelectClassName}
+            multiple
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+              setSelectedValues(
+                Array.from(e.target.selectedOptions, (option) =>
+                  Number.parseInt(option.value)
+                )
               )
-            )
-          }}
-        >
-          {filteredCellNos.map((cellNo) => (
-            <option key={cellNo} value={cellNo}>
-              {cellNo}
-            </option>
-          ))}
-        </select>
+            }}
+          >
+            {filteredCellNos.map((cellNo) => (
+              <option key={cellNo} value={cellNo}>
+                {cellNo}
+              </option>
+            ))}
+          </select>
+        </div>
       )}
       {filterType === 'signalStrength' && (
         <div className="flex gap-2">
@@ -222,8 +243,9 @@ export function FilterModal() {
           <span>]</span>
         </div>
       )}
-      <div>
+      <div className={multiSelectDivClassName}>
         <select
+          className="w-1/3"
           onChange={(e) =>
             setFilteringMode(e.target.value as 'exclude' | 'colour')
           }
@@ -232,23 +254,36 @@ export function FilterModal() {
           <option value="exclude">Exclude</option>
           <option value="colour">Colour</option>
         </select>
+        {filteringMode === 'colour' && (
+          <select
+            className="w-2/3"
+            onChange={(e) => setFilterColour(e.target.value)}
+          >
+            <option value="blue">Blue</option>
+            <option value="navy">Navy</option>
+            <option value="aqua">Aqua</option>
+            <option value="purple">Purple</option>
+            <option value="deeppink">Deep pink</option>
+            <option value="fuchsia">Fuchsia</option>
+            <option value="orange">Orange</option>
+            <option value="white">White</option>
+            <option value="gray">Gray</option>
+            <option value="darkgray">Dark gray</option>
+            <option value="silver">Silver</option>
+          </select>
+        )}
       </div>
-      {filteringMode === 'colour' && (
-        <select onChange={(e) => setFilterColour(e.target.value)}>
-          <option value="blue">Blue</option>
-          <option value="navy">Navy</option>
-          <option value="aqua">Aqua</option>
-          <option value="purple">Purple</option>
-          <option value="deeppink">Deep pink</option>
-          <option value="fuchsia">Fuchsia</option>
-          <option value="orange">Orange</option>
-          <option value="white">White</option>
-          <option value="gray">Gray</option>
-          <option value="darkgray">Dark gray</option>
-          <option value="silver">Silver</option>
-        </select>
-      )}
-      <button type="button" onClick={handleAdd}>
+      <button
+        type="button"
+        onClick={handleAdd}
+        className="block w-full text-sm
+                  dark:bg-violet-50 dark:text-violet-700
+                  mt-2 mr-4 py-2 px-4
+                  rounded-full border-0
+                  text-sm font-semibold
+                  bg-violet-50 text-violet-700
+                  hover:bg-violet-100"
+      >
         Add
       </button>
     </div>

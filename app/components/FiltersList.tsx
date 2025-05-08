@@ -2,11 +2,14 @@ import { useStore } from '@nanostores/react'
 import { $pointFilters, removeFilter } from '~/store/points'
 
 export function FiltersList() {
-  const pointFilter2 = useStore($pointFilters)
+  const pointFilters = useStore($pointFilters)
   return (
     <div>
       <h3>Filters list</h3>
-      {pointFilter2.map((f) => (
+      {pointFilters.length === 0 && (
+        <p className="ml-2 text-sm text-gray-300">No filters added</p>
+      )}
+      {pointFilters.map((f) => (
         <div key={f.id} className="w-fit">
           <span className="mr-2">
             mode: {f.mode}, type: {f.type}, values: {f.values.join(', ')}
