@@ -93,11 +93,6 @@ export default function MyApp() {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Marker position={position}>
-        <Popup>
-          A pretty CSS3 popup. <br />
-        </Popup>
-      </Marker>
       <>
         {filteredPoints.map((p, i) => {
           const pColour = getPointColour(pointFilters, p)
@@ -109,7 +104,35 @@ export default function MyApp() {
               radius={2}
               color={pColour}
               fillColor={pColour}
-            ></CircleMarker>
+            >
+              <Popup>
+                <div>
+                  <div>
+                    Lat, long, alt: {p.lat}, {p.lng}, {p.alt}
+                  </div>
+                  <div>
+                    MCC-MNC:{p.mcc}-{p.mnc}
+                  </div>
+                  <div>Type: {p.type}</div>
+                  <div>Subtype: {p.subtype}</div>
+                  <div>
+                    {p.type === 'LTE'
+                      ? 'eNodeB'
+                      : p.type === 'NR'
+                      ? 'gNodeB'
+                      : 'nodeB'}
+                    {': '}
+                    {p.xnb}
+                  </div>
+                  <div>Band: {p.band}</div>
+                  <div>Cell no: {p.cellno}</div>
+                  <div>Signal strength: {p.signal} dBm</div>
+                  <div>ARFCN: {p.arfcn}</div>
+                  <div>Frequency: {p.freqmhz} MHz</div>
+                  <div>PCI: {p.pci}</div>
+                </div>
+              </Popup>
+            </CircleMarker>
           )
         })}
       </>
