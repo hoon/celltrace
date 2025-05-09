@@ -4,8 +4,6 @@ import Papa from 'papaparse'
 
 import {
   $filteredCellNos,
-  $filteredEnbs,
-  $filteredEutraBands,
   addCmMeasurements,
   type CmCsvRow,
 } from '~/store/points'
@@ -17,6 +15,7 @@ import { NrCard } from './NrCard'
 import { disabledMultiSelectClassName } from '../style/common'
 
 export default function DataModal({ className }: { className?: string }) {
+  const [loading, setLoading] = useState(false)
   const [ituGen, setItuGen] = useState<'4g' | '5g'>('4g')
 
   function onParseComplete({
@@ -48,12 +47,14 @@ export default function DataModal({ className }: { className?: string }) {
       })
 
     addCmMeasurements(processed)
+    setLoading(false)
   }
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     if (!event.target.files) {
       return
     }
+    setLoading(true)
     for (let i = 0; i < event.target.files.length; i++) {
       const f = event.target.files[i]
       Papa.parse(f, {
@@ -79,26 +80,31 @@ export default function DataModal({ className }: { className?: string }) {
     }
   }
 
-  const filteredEnbs = useStore($filteredEnbs)
-  const filteredEutraBands = useStore($filteredEutraBands)
   const filteredCellNos = useStore($filteredCellNos)
   return (
     <div className={className}>
       <div className="h-auto">
         <form>
           <div className="mb-2">
-            <h3>Add CellMapper CSV trace</h3>
-            <input
-              type="file"
-              accept=".csv"
-              onChange={handleFileChange}
-              className="block w-full text-sm dark:text-gray-300
-                    mt-2 file:mr-4 file:py-2 file:px-4
-                    file:rounded-full file:border-0
-                    file:text-sm file:font-semibold
-                    file:bg-violet-50 file:text-violet-700
-                    hover:file:bg-violet-100"
-            />
+            <h3 className="mb-1">Add CellMapper CSV trace</h3>
+            <div className="flex items-center space-x-4">
+              <div>
+                <label
+                  className="block cursor-pointer bg-violet-100 rounded-full 
+              py-2 px-4 w-fit text-sm font-semibold
+              text-violet-700 hover:bg-violet-100"
+                >
+                  Choose a file
+                  <input
+                    type="file"
+                    accept=".csv"
+                    onChange={handleFileChange}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
+                </label>
+              </div>
+              {loading && <span>Loading...</span>}
+            </div>
           </div>
           <div className="mb-1">
             <input
