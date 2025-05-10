@@ -168,7 +168,7 @@ export const $nrBands = computed($nrarfcns, (arfcns) => {
 
 export interface PointFilter {
   id: string
-  mode: 'exclude' | 'colour'
+  mode: 'includeOnly' | 'colour'
   type: 'enb' | 'gnb' | 'eutraBand' | 'nrBand' | 'cellNo' | 'signalStrength'
   values: number[]
   colour?: string
@@ -193,7 +193,7 @@ export const $filteredPoints = computed(
 
     const filteredPoints = cellMeasurements.filter((cm) => {
       return pointFilters
-        .filter((pf) => pf.mode === 'exclude')
+        .filter((pf) => pf.mode === 'includeOnly')
         .every((pf) => {
           if (pf.type === 'enb') {
             return pf.values.includes(cm.xnb)

@@ -12,8 +12,8 @@ import {
 import { uuidv4 } from '~/util'
 
 export function FilterModal() {
-  const [filteringMode, setFilteringMode] = useState<'exclude' | 'colour'>(
-    'exclude'
+  const [filteringMode, setFilteringMode] = useState<'includeOnly' | 'colour'>(
+    'includeOnly'
   )
   const [filterType, setFilterType] = useState<string>('enb')
   const [filterColour, setFilterColour] = useState<string>('blue')
@@ -245,18 +245,18 @@ export function FilterModal() {
       )}
       <div className={multiSelectDivClassName}>
         <select
-          className="w-1/3"
+          className="w-1/2"
           onChange={(e) =>
-            setFilteringMode(e.target.value as 'exclude' | 'colour')
+            setFilteringMode(e.target.value as 'includeOnly' | 'colour')
           }
-          defaultValue={'exclude'}
+          defaultValue={'includeOnly'}
         >
-          <option value="exclude">Exclude</option>
+          <option value="includeOnly">Include only</option>
           <option value="colour">Colour</option>
         </select>
         {filteringMode === 'colour' && (
           <select
-            className="w-2/3"
+            className="w-1/2"
             onChange={(e) => setFilterColour(e.target.value)}
           >
             <option value="blue">Blue</option>
