@@ -51,7 +51,7 @@ export default function DataModal({ className }: { className?: string }) {
   }
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-    if (!event.target.files) {
+    if (!event.target.files || event.target.files.length === 0) {
       return
     }
     setLoading(true)
@@ -90,7 +90,7 @@ export default function DataModal({ className }: { className?: string }) {
             <div className="flex items-center space-x-4">
               <div>
                 <label
-                  className="block cursor-pointer bg-violet-100 rounded-full 
+                  className="relative cursor-pointer bg-violet-100 rounded-full 
               py-2 px-4 w-fit text-sm font-semibold
               text-violet-700 hover:bg-violet-100"
                 >
@@ -99,7 +99,7 @@ export default function DataModal({ className }: { className?: string }) {
                     type="file"
                     accept=".csv"
                     onChange={handleFileChange}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
                   />
                 </label>
               </div>
