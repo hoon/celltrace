@@ -4,16 +4,20 @@ import {
   Marker,
   Popup,
   TileLayer,
+  useMap,
 } from 'react-leaflet'
 import type { LatLngTuple } from 'leaflet'
 import { useState } from 'react'
 import {
   $filteredPoints,
+  $fitAllPointsOnMapFlag,
   $pointFilters,
+  clearFitAllPointsOnMapFlag,
   type CellMeasurement,
   type PointFilter,
 } from '~/store/points'
 import { useStore } from '@nanostores/react'
+import L from 'leaflet'
 
 const position: LatLngTuple = [43.466667, -80.516667]
 
@@ -80,7 +84,20 @@ export default function MyApp() {
   const filteredPoints = useStore($filteredPoints)
   const pointFilters = useStore($pointFilters)
 
-  console.log(`MyMap(): ${Date.now()}`)
+  function SetBounds() {
+    const map = useMap()
+    if (filteredPoints.length === 0) {
+      return
+    }
+    if (!$fitAllPointsOnMapFlag.get()) {
+      return
+    }
+    const bounds = L.latLngBounds(filteredPoints.map((p) => [p.lat, p.lng]))
+    map.fitBounds(bounds)
+    clearFitAllPointsOnMapFlag()
+
+    return <></>
+  }
 
   return (
     <MapContainer
@@ -136,6 +153,7 @@ export default function MyApp() {
           )
         })}
       </>
+      <SetBounds />
     </MapContainer>
   )
 }

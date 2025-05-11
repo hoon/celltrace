@@ -5,6 +5,7 @@ import Papa from 'papaparse'
 import {
   $filteredCellNos,
   addCmMeasurements,
+  setFitAllPointsOnMapFlag,
   type CmCsvRow,
 } from '~/store/points'
 import { FilterModal } from './FilterModal'
@@ -47,6 +48,7 @@ export default function DataModal({ className }: { className?: string }) {
       })
 
     addCmMeasurements(processed)
+    setFitAllPointsOnMapFlag()
     setLoading(false)
   }
 

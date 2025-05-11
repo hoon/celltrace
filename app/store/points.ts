@@ -271,3 +271,13 @@ export const $filteredCellNos = computed($filteredPoints, (filteredPoints) => {
 
   return cellNos
 })
+
+export const $fitAllPointsOnMapFlag = atom(false)
+
+export function setFitAllPointsOnMapFlag() {
+  $fitAllPointsOnMapFlag.set(true)
+}
+
+export function clearFitAllPointsOnMapFlag() {
+  $fitAllPointsOnMapFlag.set(false)
+}
