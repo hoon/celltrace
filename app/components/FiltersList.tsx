@@ -27,7 +27,8 @@ export function FiltersList() {
           )}
           <button
             className="bg-violet-50 text-violet-700 hover:bg-violet-100
-                focus:outline-none focus:ring-2 focus:ring-violet-200"
+                focus:outline-none focus:ring-2 focus:ring-violet-200
+                py-[0.25em] px-2 rounded-lg text-xs font-semibold"
             onClick={() => removeFilter(f.id)}
           >
             Remove

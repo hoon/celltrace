@@ -27,7 +27,24 @@ export function FilterModal() {
   const [selectedValues, setSelectedValues] = useState<number[]>()
 
   const multiSelectDivClassName = 'w-full'
-  const multiSelectClassName = 'w-full pl-1 pr-1'
+  const multiSelectClassName =
+    'w-full border border-gray-300 rounded-md pl-1 pr-1'
+
+  const selectClassName = 'border border-gray-300 rounded-xl p-1'
+
+  const colourOptions: [string, string][] = [
+    ['blue', 'white'],
+    ['navy', 'white'],
+    ['aqua', 'black'],
+    ['purple', 'white'],
+    ['deeppink', 'white'],
+    ['fuchsia', 'white'],
+    ['orange', 'white'],
+    ['white', 'black'],
+    ['gray', 'white'],
+    ['darkgray', 'white'],
+    ['silver', 'black'],
+  ]
 
   function handleAdd(event: React.MouseEvent<HTMLButtonElement>): void {
     if (
@@ -94,7 +111,7 @@ export function FilterModal() {
       <h3>Add filter</h3>
       <div className="w-full mb-1">
         <select
-          className="w-full pl-1 pr-1"
+          className={`${selectClassName} w-full pl-1 pr-1`}
           onChange={(e) => {
             setFilterType(e.target.value)
             setSelectedValues(undefined)
@@ -243,9 +260,9 @@ export function FilterModal() {
           <span>]</span>
         </div>
       )}
-      <div className={multiSelectDivClassName}>
+      <div className={`${multiSelectDivClassName} flex gap-2`}>
         <select
-          className="w-1/2"
+          className={`${selectClassName} w-1/2`}
           onChange={(e) =>
             setFilteringMode(e.target.value as 'includeOnly' | 'colour')
           }
@@ -256,20 +273,18 @@ export function FilterModal() {
         </select>
         {filteringMode === 'colour' && (
           <select
-            className="w-1/2"
+            className={`${selectClassName} w-1/2`}
             onChange={(e) => setFilterColour(e.target.value)}
           >
-            <option value="blue">Blue</option>
-            <option value="navy">Navy</option>
-            <option value="aqua">Aqua</option>
-            <option value="purple">Purple</option>
-            <option value="deeppink">Deep pink</option>
-            <option value="fuchsia">Fuchsia</option>
-            <option value="orange">Orange</option>
-            <option value="white">White</option>
-            <option value="gray">Gray</option>
-            <option value="darkgray">Dark gray</option>
-            <option value="silver">Silver</option>
+            {colourOptions.map(([colour, textColour]) => (
+              <option
+                style={{ backgroundColor: colour, color: textColour }}
+                key={colour}
+                value={colour}
+              >
+                {colour}
+              </option>
+            ))}
           </select>
         )}
       </div>
