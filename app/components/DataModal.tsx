@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useStore } from '@nanostores/react'
 import Papa from 'papaparse'
+import { ChevronUp, ChevronDown } from 'lucide-react'
 
 import {
   $filteredCellNos,
@@ -18,6 +19,7 @@ import { disabledMultiSelectClassName } from '../style/common'
 export default function DataModal({ className }: { className?: string }) {
   const [loading, setLoading] = useState(false)
   const [ituGen, setItuGen] = useState<'4g' | '5g'>('4g')
+  const [openModal, setOpenModal] = useState(true)
 
   function onParseComplete({
     filename,
@@ -83,12 +85,35 @@ export default function DataModal({ className }: { className?: string }) {
   }
 
   const filteredCellNos = useStore($filteredCellNos)
+  if (!openModal) {
+    return (
+      <div className="fixed z-[1000] md:top-4 md:right-4 top-2 right-2 p-3 rounded-md drop-shadow-md bg-black">
+        <button onClick={() => setOpenModal(true)}>
+          Add points{' '}
+          <ChevronDown
+            className="inline-block vertical-align-middle"
+            size={24}
+          />
+        </button>
+      </div>
+    )
+  }
   return (
     <div className={className}>
       <div className="h-auto">
         <form>
           <div className="mb-2">
-            <h3 className="mb-1">Add CellMapper CSV trace</h3>
+            <div className="w-full flex space-x-2 mb-2">
+              <h3 className="w-5/6">Add CellMapper CSV trace</h3>
+              <div className="w-1/6">
+                <button
+                  className="float-right"
+                  onClick={() => setOpenModal(false)}
+                >
+                  <ChevronUp size={24} />
+                </button>
+              </div>
+            </div>
             <div className="flex items-center space-x-4">
               <div>
                 <label
