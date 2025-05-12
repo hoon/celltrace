@@ -31,7 +31,6 @@ export default function DataModal({ className }: { className?: string }) {
     console.log(`filename: ${filename}; data.length: ${data.length}`)
 
     const processed = data
-      .filter((r) => !isNaN(parseInt(r[0])))
       .map((r) => {
         return {
           lat: parseFloat(r[0]),
@@ -48,6 +47,15 @@ export default function DataModal({ className }: { className?: string }) {
           pci: parseInt(r[11]),
         } as CmCsvRow
       })
+      .filter(
+        (r) =>
+          Number.isFinite(r.lat) &&
+          Number.isFinite(r.lng) &&
+          r.lat >= -90 &&
+          r.lat <= 90 &&
+          r.lng >= -180 &&
+          r.lng <= 180
+      )
 
     addCmMeasurements(processed)
     setFitAllPointsOnMapFlag()
