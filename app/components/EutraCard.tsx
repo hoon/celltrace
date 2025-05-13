@@ -1,5 +1,9 @@
 import { useStore } from '@nanostores/react'
-import { $filteredEnbs, $filteredEutraBands } from '~/store/points'
+import {
+  $filteredEnbs,
+  $filteredEutraBands,
+  XnbBandValues,
+} from '~/store/points'
 import { disabledMultiSelectClassName } from '../style/common'
 
 export function EutraCard() {
@@ -13,7 +17,7 @@ export function EutraCard() {
         <select multiple disabled className={disabledMultiSelectClassName}>
           {filteredEnbs.map((enb) => (
             <option key={enb} value={enb}>
-              {enb === -3 ? 'SDL/SUL' : enb}
+              {enb === XnbBandValues.SDL_SUL ? 'SDL/SUL' : enb}
             </option>
           ))}
         </select>
@@ -23,7 +27,7 @@ export function EutraCard() {
         <select multiple disabled className={disabledMultiSelectClassName}>
           {filteredEutraBands.map((band) => (
             <option key={band} value={band}>
-              {band}
+              {band === XnbBandValues.UNKOWN ? 'Unknown' : band}
             </option>
           ))}
         </select>

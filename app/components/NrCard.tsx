@@ -1,5 +1,5 @@
 import { useStore } from '@nanostores/react'
-import { $filteredGnbs, $filteredNrBands } from '~/store/points'
+import { $filteredGnbs, $filteredNrBands, XnbBandValues } from '~/store/points'
 import { disabledMultiSelectClassName } from '../style/common'
 
 export function NrCard() {
@@ -12,7 +12,11 @@ export function NrCard() {
         <select multiple disabled className={disabledMultiSelectClassName}>
           {filteredGnbs.map((gnb) => (
             <option key={gnb} value={gnb}>
-              {gnb === -2 ? 'NSA' : gnb}
+              {gnb === XnbBandValues.NSA
+                ? 'NSA'
+                : gnb === XnbBandValues.SDL_SUL
+                ? 'SDL/SUL'
+                : gnb}
             </option>
           ))}
         </select>
@@ -22,7 +26,7 @@ export function NrCard() {
         <select multiple disabled className={disabledMultiSelectClassName}>
           {filteredNrBands.map((band) => (
             <option key={band} value={band}>
-              {band === -2 ? 'NSA' : band}
+              {band === XnbBandValues.NSA ? 'NSA' : band}
             </option>
           ))}
         </select>

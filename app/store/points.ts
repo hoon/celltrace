@@ -28,6 +28,12 @@ export interface CellMeasurement extends CmCsvRow {
   cellno: number
 }
 
+export enum XnbBandValues {
+  UNKOWN = -1,
+  NSA = -2,
+  SDL_SUL = -3,
+}
+
 export const $cmMeasurements = atom<CmCsvRow[]>([])
 
 export function setCmMeasurements(points: CmCsvRow[]) {
@@ -66,7 +72,7 @@ export const $cellMeasurements = computed(
             return bands[0]
           }
         } else if (_p.type === 'NR' && _p.subtype === 'NSA') {
-          return -2 // 5G NSA w/o NR-ARFCN
+          return XnbBandValues.NSA // 5G NSA w/o NR-ARFCN
         }
         return -1
       })(p)
@@ -76,13 +82,13 @@ export const $cellMeasurements = computed(
           return _p.cid >> 8
         } else if (_p.type === 'LTE' && _p.cid === 0) {
           if (Number.isFinite(_p.arfcn)) {
-            return -3 // SDL/SUL
+            return XnbBandValues.SDL_SUL // SDL/SUL
           }
           return -1
         } else if (_p.type === 'NR' && _p.subtype !== 'NSA') {
           return _p.cid >> 14
         } else if (_p.type === 'NR' && _p.subtype === 'NSA') {
-          return -2 // 5G NSA
+          return XnbBandValues.NSA
         }
         return -1
       })(p)
