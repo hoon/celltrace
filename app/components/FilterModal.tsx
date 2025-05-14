@@ -231,13 +231,13 @@ export function FilterModal() {
         </div>
       )}
       {filterType === 'signalStrength' && (
-        <div className="flex gap-2">
-          Signal range
+        <div className="flex items-center gap-2 my-1">
+          <span className="text-sm">range:</span>
           <span>[</span>
           <input
             type="number"
             name="signalMin"
-            className="w-20"
+            className="w-1/4 border rounded-md px-1"
             onChange={(e) =>
               setSelectedValues([
                 Number.parseInt(e.target.value),
@@ -245,11 +245,11 @@ export function FilterModal() {
               ])
             }
           />
-          <span>...</span>
+          <span>,</span>
           <input
             type="number"
             name="signalMax"
-            className="w-20"
+            className="w-1/4 border rounded-md px-1"
             onChange={(e) =>
               setSelectedValues([
                 selectedValues?.[0] ?? -Number.NEGATIVE_INFINITY,
