@@ -114,6 +114,9 @@ export default function MyApp() {
         {filteredPoints.map((p, i) => {
           const pColour = getPointColour(pointFilters, p)
 
+          const fieldNameDivClass = 'font-bold text-right'
+          const fieldValueDivClass = 'font-mono'
+
           return (
             <CircleMarker
               key={`m-${i}-${pColour}`}
@@ -123,30 +126,45 @@ export default function MyApp() {
               fillColor={pColour}
             >
               <Popup>
-                <div>
-                  <div>
-                    Lat, long, alt: {p.lat}, {p.lng}, {p.alt}
+                <div className="grid grid-cols-2 gap-2 min-w-48">
+                  <div className={fieldNameDivClass}>
+                    <abbr title="latitude">lat</abbr>,{' '}
+                    <abbr title="longitude">long</abbr>:
                   </div>
-                  <div>
-                    MCC-MNC:{p.mcc}-{p.mnc}
+                  <div className={fieldValueDivClass}>
+                    {p.lat}, {p.lng}
                   </div>
-                  <div>Type: {p.type}</div>
-                  <div>Subtype: {p.subtype}</div>
-                  <div>
+                  <div className={fieldNameDivClass}>Altitude (m):</div>
+                  <div className={fieldValueDivClass}>{p.alt}</div>
+                  <div className={fieldNameDivClass}>MCC-MNC:</div>
+                  <div className={fieldValueDivClass}>
+                    {p.mcc}-{p.mnc}
+                  </div>
+                  <div className={fieldNameDivClass}>Type:</div>
+                  <div className={fieldValueDivClass}>{p.type}</div>
+                  <div className={fieldNameDivClass}>Subtype:</div>
+                  <div className={fieldValueDivClass}>{p.subtype}</div>
+                  <div className={fieldNameDivClass}>
                     {p.type === 'LTE'
                       ? 'eNodeB'
                       : p.type === 'NR'
                       ? 'gNodeB'
                       : 'nodeB'}
                     {': '}
-                    {p.xnb}
                   </div>
-                  <div>Band: {p.band}</div>
-                  <div>Cell no: {p.cellno}</div>
-                  <div>Signal strength: {p.signal} dBm</div>
-                  <div>ARFCN: {p.arfcn}</div>
-                  <div>Frequency: {p.freqmhz} MHz</div>
-                  <div>PCI: {p.pci}</div>
+                  <div className={fieldValueDivClass}>{p.xnb}</div>
+                  <div className={fieldNameDivClass}>Band:</div>
+                  <div className={fieldValueDivClass}>{p.band}</div>
+                  <div className={fieldNameDivClass}>Cell no:</div>
+                  <div className={fieldValueDivClass}>{p.cellno}</div>
+                  <div className={fieldNameDivClass}>Signal strength:</div>
+                  <div className={fieldValueDivClass}>{p.signal} dBm</div>
+                  <div className={fieldNameDivClass}>ARFCN:</div>
+                  <div className={fieldValueDivClass}>{p.arfcn}</div>
+                  <div className={fieldNameDivClass}>Frequency:</div>
+                  <div className={fieldValueDivClass}>{p.freqmhz} MHz</div>
+                  <div className={fieldNameDivClass}>PCI:</div>
+                  <div className={fieldValueDivClass}>{p.pci}</div>
                 </div>
               </Popup>
             </CircleMarker>
