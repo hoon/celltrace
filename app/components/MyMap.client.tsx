@@ -145,6 +145,10 @@ export default function MyApp() {
                   <div className={fieldNameDivClass}>Subtype:</div>
                   <div className={fieldValueDivClass}>{p.subtype}</div>
                   <div className={fieldNameDivClass}>
+                    <abbr title="Location Area Code">LAC:</abbr>
+                  </div>
+                  <div className={fieldValueDivClass}>{p.lac}</div>
+                  <div className={fieldNameDivClass}>
                     {p.type === 'LTE'
                       ? 'eNodeB'
                       : p.type === 'NR'

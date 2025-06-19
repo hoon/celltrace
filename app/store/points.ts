@@ -3,6 +3,9 @@ import {
   earfcnToFrequency,
   nrArfcnToFrequency,
   nrArfcnToBands,
+  uarfcnToBands,
+  LinkDirection,
+  uarfcnToFrequencyFdd,
 } from 'arfcn'
 import { atom, computed } from 'nanostores'
 
@@ -29,7 +32,7 @@ export interface CellMeasurement extends CmCsvRow {
 }
 
 export enum XnbBandValues {
-  UNKOWN = -1,
+  UNKNOWN = -1,
   NSA = -2,
   SDL_SUL = -3,
 }
@@ -54,15 +57,6 @@ export const $cellMeasurements = computed(
   $cmMeasurements,
   (points: CmCsvRow[]) =>
     points.map((p: CmCsvRow) => {
-      const freqmhz = ((_p: CmCsvRow) => {
-        if (_p.type === 'LTE') {
-          return earfcnToFrequency(_p.arfcn)
-        } else if (_p.type === 'NR') {
-          return nrArfcnToFrequency(_p.arfcn)
-        }
-        return -1
-      })(p)
-
       const band = ((_p: CmCsvRow) => {
         if (_p.type === 'LTE') {
           return earfcnToBand(_p.arfcn)
@@ -73,9 +67,38 @@ export const $cellMeasurements = computed(
           }
         } else if (_p.type === 'NR' && _p.subtype === 'NSA') {
           return XnbBandValues.NSA // 5G NSA w/o NR-ARFCN
+        } else if (_p.type === 'UMTS') {
+          const utraBands = uarfcnToBands(_p.arfcn, {
+            direction: LinkDirection.Downlink,
+          })
+          if (utraBands && utraBands.length >= 1) {
+            const fddBands = utraBands.filter((b) => typeof b === 'number')
+            if (fddBands.length >= 1) {
+              return fddBands[0]
+            }
+          }
+        }
+        return XnbBandValues.UNKNOWN
+      })(p)
+
+      const freqmhz = ((_p: CmCsvRow, _band: number) => {
+        if (_p.type === 'LTE') {
+          return earfcnToFrequency(_p.arfcn)
+        } else if (_p.type === 'NR') {
+          return nrArfcnToFrequency(_p.arfcn)
+        } else if (_p.type === 'UMTS') {
+          const additionalFreq = uarfcnToFrequencyFdd(
+            _p.arfcn,
+            _band,
+            'Additional'
+          )
+          if (additionalFreq >= 0) {
+            return additionalFreq
+          }
+          return uarfcnToFrequencyFdd(_p.arfcn, _band, 'General')
         }
         return -1
-      })(p)
+      })(p, band)
 
       const xnb = ((_p: CmCsvRow) => {
         if (_p.type === 'LTE' && _p.cid !== 0) {
@@ -89,6 +112,13 @@ export const $cellMeasurements = computed(
           return _p.cid >> 14
         } else if (_p.type === 'NR' && _p.subtype === 'NSA') {
           return XnbBandValues.NSA
+        } else if (_p.type === 'UMTS') {
+          const utraCellId = _p.cid & 0xffff
+          if (_p.mcc === 302 && [610, 220, 880, 500].includes(_p.mnc)) {
+            // if carrier is Bell, Telus, Bell-Telus FastRoam, or Videotron
+            return utraCellId % 1000
+          }
+          return Math.floor(utraCellId / 10)
         }
         return -1
       })(p)
@@ -98,6 +128,13 @@ export const $cellMeasurements = computed(
           return _p.cid & 0xff
         } else if (_p.type === 'NR') {
           return _p.cid & 0x3fff
+        } else if (_p.type === 'UMTS') {
+          const utraCellId = _p.cid & 0xffff
+          if (_p.mcc === 302 && [610, 220, 880, 500].includes(_p.mnc)) {
+            // if carrier is Bell, Telus, Bell-Telus FastRoam, or Videotron
+            return Math.floor(utraCellId / 1000)
+          }
+          return utraCellId % 10
         }
         return -1
       })(p)

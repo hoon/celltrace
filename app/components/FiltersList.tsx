@@ -16,8 +16,8 @@ export function FiltersList() {
       enb: 'eNB',
       gnb: 'gNB',
       cellNo: 'Cell no.',
-      eutraBand: 'e-UTRA band',
-      nrBand: 'NR band',
+      eutraBand: 'LTE band',
+      nrBand: '5G NR band',
       signalStrength: 'signal strength',
     }
     return transText[text] ?? text

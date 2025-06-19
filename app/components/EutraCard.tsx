@@ -27,7 +27,7 @@ export function EutraCard() {
         <select multiple disabled className={disabledMultiSelectClassName}>
           {filteredEutraBands.map((band) => (
             <option key={band} value={band}>
-              {band === XnbBandValues.UNKOWN ? 'Unknown' : band}
+              {band === XnbBandValues.UNKNOWN ? 'Unknown' : band}
             </option>
           ))}
         </select>
