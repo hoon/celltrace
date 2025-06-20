@@ -37,6 +37,22 @@ export enum XnbBandValues {
   SDL_SUL = -3,
 }
 
+export interface PointFilter {
+  id: string
+  mode: 'includeOnly' | 'colour'
+  type:
+    | 'enb'
+    | 'gnb'
+    | 'eutraBand'
+    | 'nrBand'
+    | 'cellNo'
+    | 'signalStrength'
+    | 'networkType'
+  values: number[]
+  networkType?: 'GSM' | 'UMTS' | 'CDMA' | 'LTE' | 'NR'
+  colour?: string
+}
+
 export const $cmMeasurements = atom<CmCsvRow[]>([])
 
 export function setCmMeasurements(points: CmCsvRow[]) {
@@ -209,14 +225,6 @@ export const $nrBands = computed($nrarfcns, (arfcns) => {
   return [...new Set(allBands.flat())].sort()
 })
 
-export interface PointFilter {
-  id: string
-  mode: 'includeOnly' | 'colour'
-  type: 'enb' | 'gnb' | 'eutraBand' | 'nrBand' | 'cellNo' | 'signalStrength'
-  values: number[]
-  colour?: string
-}
-
 export const $pointFilters = atom<PointFilter[]>([])
 
 export function addFilter(filter: PointFilter) {
@@ -250,6 +258,8 @@ export const $filteredPoints = computed(
             return pf.values.includes(cm.cellno)
           } else if (pf.type === 'signalStrength') {
             return cm.signal >= pf.values[0] && cm.signal <= pf.values[1]
+          } else if (pf.type === 'networkType') {
+            return !!pf.networkType ? cm.type === pf.networkType : true
           }
           return true
         })
@@ -324,3 +334,14 @@ export function setFitAllPointsOnMapFlag() {
 export function clearFitAllPointsOnMapFlag() {
   $fitAllPointsOnMapFlag.set(false)
 }
+
+export const $filteredNetworkTypes = computed(
+  $filteredPoints,
+  (filteredPoints) => {
+    const networkTypes = [
+      ...new Set(filteredPoints.map((cm) => cm.type)),
+    ].sort()
+
+    return networkTypes
+  }
+)

@@ -19,6 +19,7 @@ export function FiltersList() {
       eutraBand: 'LTE band',
       nrBand: '5G NR band',
       signalStrength: 'signal strength',
+      networkType: 'Network type',
     }
     return transText[text] ?? text
   }
@@ -59,6 +60,13 @@ export function FiltersList() {
           {filter.values[1] === Number.POSITIVE_INFINITY
             ? '∞'
             : filter.values[1]}
+        </span>
+      )
+    } else if (filter.type === 'networkType') {
+      elements.push(
+        <span className="mr-2">
+          {getDispText(filter.mode)} {getDispText(filter.type)}{' '}
+          {filter.networkType}
         </span>
       )
     } else {

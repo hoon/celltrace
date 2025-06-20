@@ -8,6 +8,7 @@ import {
   $filteredEutraBands,
   $filteredNrBands,
   addFilter,
+  $filteredNetworkTypes,
 } from '~/store/points'
 import { uuidv4 } from '~/util'
 
@@ -23,8 +24,12 @@ export function FilterModal() {
   const filteredEutraBands = useStore($filteredEutraBands)
   const filteredNrBands = useStore($filteredNrBands)
   const filteredCellNos = useStore($filteredCellNos)
+  const filteredNetworkTypes = useStore($filteredNetworkTypes)
 
   const [selectedValues, setSelectedValues] = useState<number[]>()
+  const [selectedNetworkType, setSelectedNetworkType] = useState<
+    'GSM' | 'UMTS' | 'CDMA' | 'LTE' | 'NR'
+  >()
 
   const multiSelectDivClassName = 'w-full'
   const multiSelectClassName =
@@ -46,6 +51,17 @@ export function FilterModal() {
     ['silver', 'black'],
   ]
 
+  function getDispText(text: string) {
+    const transText: Record<string, string> = {
+      GSM: 'GSM (2G)',
+      UMTS: 'UMTS (3G)',
+      CDMA: 'CDMA (2G/3G)',
+      LTE: 'LTE (4G)',
+      NR: 'NR (5G)',
+    }
+    return transText[text] ?? text
+  }
+
   function handleAdd(event: React.MouseEvent<HTMLButtonElement>): void {
     if (
       filterType &&
@@ -56,6 +72,7 @@ export function FilterModal() {
         'nrBand',
         'cellNo',
         'signalStrength',
+        'networkType',
       ].includes(filterType)
     ) {
       const newFilterValues = selectedValues ? [...selectedValues] : []
@@ -99,8 +116,11 @@ export function FilterModal() {
           | 'eutraBand'
           | 'nrBand'
           | 'cellNo'
-          | 'signalStrength',
+          | 'signalStrength'
+          | 'networkType',
         values: newFilterValues,
+        networkType:
+          filterType === 'networkType' ? selectedNetworkType : undefined,
         colour: filteringMode === 'colour' ? filterColour : undefined,
       })
     }
@@ -123,6 +143,7 @@ export function FilterModal() {
           <option value="nrBand">5G NR band</option>
           <option value="cellNo">Cell number</option>
           <option value="signalStrength">Signal strength</option>
+          <option value="networkType">Network type</option>
         </select>
       </div>
       {filterType === 'enb' && (
@@ -258,6 +279,25 @@ export function FilterModal() {
             }
           />
           <span>]</span>
+        </div>
+      )}
+      {filterType === 'networkType' && (
+        <div className={multiSelectDivClassName}>
+          <select
+            className={multiSelectClassName}
+            multiple
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+              setSelectedNetworkType(
+                e.target.value as 'GSM' | 'UMTS' | 'CDMA' | 'LTE' | 'NR'
+              )
+            }}
+          >
+            {filteredNetworkTypes.map((networkType) => (
+              <option key={networkType} value={networkType}>
+                {getDispText(networkType)}
+              </option>
+            ))}
+          </select>
         </div>
       )}
       <div className={`${multiSelectDivClassName} flex gap-2`}>
