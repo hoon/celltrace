@@ -73,6 +73,13 @@ function getPointColour(pointFilters: PointFilter[], point: CellMeasurement) {
       if (point.signal >= pf.values[0] && point.signal <= pf.values[1]) {
         colour = pf.colour
       }
+    } else if (pf.type === 'mccMnc') {
+      for (let i = 0; i + 1 < pf.values.length; i += 2) {
+        if (point.mcc === pf.values[i] && point.mnc === pf.values[i + 1]) {
+          colour = pf.colour
+          break
+        }
+      }
     }
   }
   return colour ?? getSignalStrengthColour(point.signal)

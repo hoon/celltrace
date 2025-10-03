@@ -9,6 +9,7 @@ import {
   $filteredNrBands,
   addFilter,
   $filteredNetworkTypes,
+  $filteredMccMnc,
 } from '~/store/points'
 import { uuidv4 } from '~/util'
 
@@ -25,6 +26,7 @@ export function FilterModal() {
   const filteredNrBands = useStore($filteredNrBands)
   const filteredCellNos = useStore($filteredCellNos)
   const filteredNetworkTypes = useStore($filteredNetworkTypes)
+  const filteredMccMnc = useStore($filteredMccMnc)
 
   const [selectedValues, setSelectedValues] = useState<number[]>()
   const [selectedNetworkType, setSelectedNetworkType] = useState<
@@ -73,6 +75,7 @@ export function FilterModal() {
         'cellNo',
         'signalStrength',
         'networkType',
+        'mccMnc',
       ].includes(filterType)
     ) {
       const newFilterValues = selectedValues ? [...selectedValues] : []
@@ -117,7 +120,8 @@ export function FilterModal() {
           | 'nrBand'
           | 'cellNo'
           | 'signalStrength'
-          | 'networkType',
+          | 'networkType'
+          | 'mccMnc',
         values: newFilterValues,
         networkType:
           filterType === 'networkType' ? selectedNetworkType : undefined,
@@ -144,6 +148,7 @@ export function FilterModal() {
           <option value="cellNo">Cell number</option>
           <option value="signalStrength">Signal strength</option>
           <option value="networkType">Network type</option>
+          <option value="mccMnc">Carrier (MCC-MNC)</option>
         </select>
       </div>
       {filterType === 'enb' && (
@@ -300,12 +305,35 @@ export function FilterModal() {
           </select>
         </div>
       )}
+      {filterType === 'mccMnc' && (
+        <div className={multiSelectDivClassName}>
+          <select
+            className={multiSelectClassName}
+            multiple
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+              setSelectedValues(
+                Array.from(e.target.selectedOptions, (option) => [
+                  Number.parseInt(option.value.split('-')[0]),
+                  Number.parseInt(option.value.split('-')[1]),
+                ]).flat()
+              )
+            }}
+          >
+            {filteredMccMnc.map((mccMnc) => (
+              <option key={mccMnc} value={mccMnc}>
+                {mccMnc}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
       <div className={`${multiSelectDivClassName} flex gap-2`}>
         <select
           className={`${selectClassName} w-1/2`}
-          onChange={(e) =>
+          onChange={(e) => {
             setFilteringMode(e.target.value as 'includeOnly' | 'colour')
-          }
+            setFilterColour(colourOptions[0][0])
+          }}
           defaultValue={'includeOnly'}
         >
           <option value="includeOnly">Include only</option>

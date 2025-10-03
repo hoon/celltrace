@@ -48,7 +48,9 @@ export interface PointFilter {
     | 'cellNo'
     | 'signalStrength'
     | 'networkType'
+    | 'mccMnc'
   values: number[]
+  mccMncValues?: number[][]
   networkType?: 'GSM' | 'UMTS' | 'CDMA' | 'LTE' | 'NR'
   colour?: string
 }
@@ -225,6 +227,14 @@ export const $nrBands = computed($nrarfcns, (arfcns) => {
   return [...new Set(allBands.flat())].sort()
 })
 
+export const $mccMnc = computed(
+  $cellMeasurements,
+  (points: CellMeasurement[]) => {
+    const mccMnc = new Set(points.map((p) => `${p.mcc}-${p.mnc}`))
+    return [...mccMnc].sort()
+  }
+)
+
 export const $pointFilters = atom<PointFilter[]>([])
 
 export function addFilter(filter: PointFilter) {
@@ -260,6 +270,15 @@ export const $filteredPoints = computed(
             return cm.signal >= pf.values[0] && cm.signal <= pf.values[1]
           } else if (pf.type === 'networkType') {
             return !!pf.networkType ? cm.type === pf.networkType : true
+          } else if (pf.type === 'mccMnc') {
+            // MCC-MNC filter value is stored like this
+            // [mcc0, mnc0, mcc1, mnc1, mcc2, mnc2, ...]
+            for (let i = 0; i + 1 < pf.values.length; i += 2) {
+              if (cm.mcc === pf.values[i] && cm.mnc === pf.values[i + 1]) {
+                return true
+              }
+            }
+            return false
           }
           return true
         })
@@ -345,3 +364,8 @@ export const $filteredNetworkTypes = computed(
     return networkTypes
   }
 )
+
+export const $filteredMccMnc = computed($filteredPoints, (filteredPoints) => {
+  const mccMnc = new Set(filteredPoints.map((cm) => `${cm.mcc}-${cm.mnc}`))
+  return [...mccMnc].sort()
+})
