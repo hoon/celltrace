@@ -50,7 +50,6 @@ export interface PointFilter {
     | 'networkType'
     | 'mccMnc'
   values: number[]
-  mccMncValues?: number[][]
   networkType?: 'GSM' | 'UMTS' | 'CDMA' | 'LTE' | 'NR'
   colour?: string
 }
