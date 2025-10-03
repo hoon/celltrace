@@ -11,7 +11,7 @@ export function EutraCard() {
   const filteredEutraBands = useStore($filteredEutraBands)
 
   return (
-    <div>
+    <div className="text-sm">
       <div>
         <h3>eNB IDs</h3>
         <select multiple disabled className={disabledMultiSelectClassName}>

@@ -6,7 +6,7 @@ export function NrCard() {
   const filteredGnbs = useStore($filteredGnbs)
   const filteredNrBands = useStore($filteredNrBands)
   return (
-    <div>
+    <div className="text-sm">
       <div>
         <h3>gNB IDs</h3>
         <select multiple disabled className={disabledMultiSelectClassName}>

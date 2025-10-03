@@ -110,7 +110,7 @@ export default function DataModal({ className }: { className?: string }) {
     <div className={className}>
       <div className="h-auto">
         <form>
-          <div className="mb-2">
+          <div className="mb-4">
             <div className="w-full flex space-x-2 mb-2">
               <h3 className="w-5/6">Add CellMapper CSV trace</h3>
               <div className="w-1/6">
@@ -141,7 +141,9 @@ export default function DataModal({ className }: { className?: string }) {
               {loading && <span>Loading...</span>}
             </div>
           </div>
-          <div className="mb-1">
+          <hr className="my-1" />
+          Displayed points
+          <div className="mb-1 text-sm">
             <input
               type="radio"
               name="ituGen"
