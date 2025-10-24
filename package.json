@@ -13,6 +13,7 @@
     "@nanostores/react": "^1.0.0",
     "@react-router/serve": "^7.6.1",
     "arfcn": "^2.1.1",
+    "caniuse-lite": "^1.0.30001751",
     "isbot": "^5.1.17",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.509.0",
